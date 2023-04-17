@@ -22,9 +22,11 @@ export default function Home(){
 
   const login = (data)=>{
     setGoogleResponse(data);
-    fcl.authenticate();
   }
 
+  const loginWallet = ()=>{
+    fcl.authenticate();
+  }
   const logout = ()=>{
     googleLogout();
     fcl.unauthenticate();
@@ -44,27 +46,55 @@ export default function Home(){
     //     setProfile(data);
     // }
     // fetchUser();
-  },[googleResponse])
+  },[googleResponse,user.addr])
 
 
   return(
     <>
     <GoogleOAuthProvider clientId={`${CLIENT_ID}`}>
       <div className="flex justify-center items-center w-full h-screen bg-green-400">
-      
-      {
-        user.addr? 
-        <p>
-          <span className="text-lg font-semibold">
-            {user?.addr}
-            <button className="bg-blue-200 h-12 w-30 text-lg text-[#3f3f3f] font-bold p-4 rounded-sm flex items-center hover:bg-blue-300" onClick={logout}>
-              Logout
-            </button>
-          </span>
-        </p>
-        :
-        <GoogleLogin onSuccess={login} onError={()=>alert("Error occured while signing in")}/>
-      }
+        {/* {
+          Object.keys(googleResponse).length < 1 && 
+          <GoogleLogin onSuccess={login} onError={()=>alert("Error occured while signing in")}/>
+        }
+        {
+          (Object.keys(googleResponse).length < 1 && user.addr)?
+           <p>
+         <span className="text-lg font-semibold">
+           {user?.addr}
+           <button className="bg-blue-200 shadow-sm h-12 w-30 text-lg text-[#3f3f3f] font-bold p-4 rounded-sm flex items-center hover:bg-blue-300" onClick={logout}>
+             Logout
+           </button>
+         </span>
+       </p>:
+         <span className="text-lg font-semibold">
+         <button className="bg-blue-200 h-12 w-30 text-lg text-[#3f3f3f] font-bold p-4 rounded-sm flex items-center hover:bg-blue-300" onClick={loginWallet}>
+           Login
+         </button>
+       </span>
+        } */}
+
+        {
+          Object.keys(googleResponse).length < 1 &&
+          <GoogleLogin onSuccess={login} onError={()=>alert("Error occured while signing in")}/>
+        }
+        {
+           Object.keys(googleResponse).length > 1 &&
+           (
+            user.addr ?
+            <span className="text-lg font-semibold">
+           {user?.addr}
+           <button className="bg-blue-200 shadow-lg h-12 w-30 text-lg text-[#3f3f3f] font-bold p-4 rounded-sm flex items-center hover:bg-blue-300" onClick={logout}>
+             Logout
+           </button>
+         </span>:
+         <span className="text-lg font-semibold">
+         <button className="bg-blue-200 shadow-lg h-12 w-30 text-lg text-black font-bold p-4 rounded-sm flex items-center hover:bg-blue-300" onClick={loginWallet}>
+           Connect to your wallet to login
+         </button>
+       </span>
+           )
+        }
       </div>
     </GoogleOAuthProvider>
     </>
